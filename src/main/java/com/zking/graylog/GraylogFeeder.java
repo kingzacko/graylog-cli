@@ -33,23 +33,23 @@ public class GraylogFeeder
             String serverURL = clInput.getOptionValue("url");
             String inputFile = clInput.getOptionValue("input");
             ObjectMapper mapper = new ObjectMapper();
-            List<Log> logEntries = new ArrayList<>();
+            List<LogEntry> logEntries = new ArrayList<>();
             try(BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    logEntries.add(mapper.readValue(line, Log.class));
+                    logEntries.add(mapper.readValue(line, LogEntry.class));
                 }
             } catch (IOException e) {
                 System.out.println(String.format("Unable to parse input file: %s", e));
             }
-            System.out.printf("Log entry count: %d\n", logEntries.size());
+            System.out.printf("LogEntry count: %d\n", logEntries.size());
             HttpClient client = HttpClients.createDefault();
             HttpPost post = new HttpPost(serverURL);
             post.setHeader("Content-Type", "application/json");
             StringEntity gelfMessage;
             HttpResponse response;
             try {
-                for (Log log : logEntries) {
+                for (LogEntry log : logEntries) {
                     gelfMessage = new StringEntity(log.toGELF());
                     //System.out.println(log.toGELF());
                     post.setEntity(gelfMessage);

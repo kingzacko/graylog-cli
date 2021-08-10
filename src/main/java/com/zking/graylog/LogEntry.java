@@ -10,7 +10,7 @@ import javax.json.JsonWriter;
  * POJO representing a single log entry to be sent to a Graylog server 
  * 
  */
-public class Log implements GELFMessage {
+public class LogEntry implements GELFMessage {
     private String clientDeviceType;
     private String clientIP;
     private String clientIPClass;
