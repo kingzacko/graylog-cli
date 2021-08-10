@@ -1,0 +1,16 @@
+{
+    "ClientDeviceType": "mobile",
+    "ClientIP": "192.168.239.245",
+    "ClientIPClass": "noRecord",
+    "ClientStatus": 200,
+    "ClientRequestBytes": 632,
+    "ClientRequestReferer": "graylog.org",
+    "ClientRequestURI": "/search",
+    "ClientRequestUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/600.7.12 (KHTML, like Gecko) Version/8.0.7 Safari/600.7.12",
+    "ClientSrcPort": 264,
+    "EdgeServerIP": "10.0.130.188",
+    "EdgeStartTimestamp": 1576929197,
+    "DestinationIP": "172.16.122.29",
+    "OriginResponseBytes": 616,
+    "OriginResponseTime": 435000000
+}
