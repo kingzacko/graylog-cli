@@ -57,17 +57,14 @@ public class GraylogFeeder
                 for (LogEntry log : logEntries) {
                     gelfMessage = new StringEntity(log.toGELF());
                     LOGGER.trace("Sending GELF formatted log to server: {}", log.toGELF());
-                    //post.setEntity(gelfMessage);
-                    //response = client.execute(post);
+                    post.setEntity(gelfMessage);
+                    response = client.execute(post);
                 }
             } catch (UnsupportedEncodingException uee) {
                 LOGGER.error("Error encoding log entry: {}", uee.toString());
+            } catch (IOException ioe) {
+                LOGGER.error("Error sending message to Graylog: {}", ioe.toString());
             }
-            //  catch (IOException ioe) {
-            //     LOGGER.error("Error sending message to Graylog: {}", ioe.toString());
-            // }
-
-
         }
     }
 

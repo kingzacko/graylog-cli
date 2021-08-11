@@ -6,7 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com.zking.graylog.GraylogFeeder" level="WARN" additivity="false">
+        <Logger name="com.zking.graylog" level="WARN" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <Root level="error">
