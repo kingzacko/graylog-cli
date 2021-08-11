@@ -6,11 +6,16 @@ import java.io.StringWriter;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * POJO representing a single log entry to be sent to a Graylog server 
  * 
  */
 public class LogEntry implements GELFMessage {
+
+    private static final Logger LOGGER = LogManager.getLogger(LogEntry.class);
+
     private String clientDeviceType;
     private String clientIP;
     private String clientIPClass;
@@ -263,10 +268,8 @@ public class LogEntry implements GELFMessage {
                 writer.writeObject(gelfMessage);
                 return stringWriter.getBuffer().toString();
             } catch (IOException ioe) {
-                System.out.printf("Unable to write Log in GELF format: %s\n", ioe);
+                LOGGER.error("Unable to write Log in GELF format: {}", ioe.toString());
                 return "";
             }
-            
-            
     }
 }

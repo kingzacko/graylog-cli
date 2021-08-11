@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.cli.CommandLine;
@@ -18,6 +19,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * CLI application for reading Graylog input file and server URL then
@@ -26,6 +29,8 @@ import org.apache.http.impl.client.HttpClients;
  */
 public class GraylogFeeder 
 {
+    public static final Logger LOGGER = LogManager.getLogger(GraylogFeeder.class);
+
     public static void main(String[] args) {
         // parse the command line parameters
         CommandLine clInput = parseParams(args);
@@ -40,9 +45,9 @@ public class GraylogFeeder
                     logEntries.add(mapper.readValue(line, LogEntry.class));
                 }
             } catch (IOException e) {
-                System.out.println(String.format("Unable to parse input file: %s", e));
+                LOGGER.error("Unable to parse input file: {}", e.toString());
             }
-            System.out.printf("LogEntry count: %d\n", logEntries.size());
+            LOGGER.trace("LogEntry count: {}", logEntries.size());
             HttpClient client = HttpClients.createDefault();
             HttpPost post = new HttpPost(serverURL);
             post.setHeader("Content-Type", "application/json");
@@ -51,13 +56,16 @@ public class GraylogFeeder
             try {
                 for (LogEntry log : logEntries) {
                     gelfMessage = new StringEntity(log.toGELF());
-                    //System.out.println(log.toGELF());
-                    post.setEntity(gelfMessage);
-                    response = client.execute(post);
+                    LOGGER.trace("Sending GELF formatted log to server: {}", log.toGELF());
+                    //post.setEntity(gelfMessage);
+                    //response = client.execute(post);
                 }
-            } catch (Exception e ) {
-                System.out.printf("Error sending log entry: %s", e);
+            } catch (UnsupportedEncodingException uee) {
+                LOGGER.error("Error encoding log entry: {}", uee.toString());
             }
+            //  catch (IOException ioe) {
+            //     LOGGER.error("Error sending message to Graylog: {}", ioe.toString());
+            // }
 
 
         }
@@ -80,9 +88,8 @@ public class GraylogFeeder
         try {
             return parser.parse(options, args);
         } catch (ParseException e) {
-            System.out.println(e.getMessage());
+            LOGGER.error("error parsing command line arguments: {}", e.getMessage());
             formatter.printHelp("GraylogFeeder", options);
-
             return null;
         }
     }
